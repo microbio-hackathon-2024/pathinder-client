@@ -17,3 +17,13 @@ Similar software:
 The website of Patinder is at https://microbioinfo-hackathon.loculus.org/.
 
 We use the [Loculus software](https://loculus.org) to build the website and backend. The config can be found at https://github.com/loculus-project/loculus/pull/2989.
+
+
+## TODO
+
+* Client to have a list of mirrored servers to query. 
+* Client can fetch assemblies from all servers to compare them locally.
+* Client can upload profiles/assemblies to servers.
+* Automatic updating of the "public" server that has SRA/ENA data.
+* League table os user submissions 
+* 

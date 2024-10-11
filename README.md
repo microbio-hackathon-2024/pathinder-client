@@ -25,5 +25,5 @@ We use the [Loculus software](https://loculus.org) to build the website and back
 * Client can fetch assemblies from all servers to compare them locally.
 * Client can upload profiles/assemblies to servers.
 * Automatic updating of the "public" server that has SRA/ENA data.
-* League table os user submissions 
+* League table of user submissions 
 * 

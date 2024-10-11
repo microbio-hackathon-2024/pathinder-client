@@ -51,19 +51,25 @@ def download_from_loculus() -> list[SequenceEntry]:
         return []
 
 
-def find(query: set[str], database: list[SequenceEntry], min_proportion_matched: float) -> list[(SequenceEntry, float)]:
+def find(query: set[str], database: list[SequenceEntry], min_proportion_matched: float, comparison_method) -> list[(SequenceEntry, float)]:
     matched: list[(SequenceEntry, float)] = []
     for database_entry in database:
-        proportion_matched = match(query, database_entry.profile_hash)
+        proportion_matched = comparison_method(query, database_entry.profile_hash)
         if proportion_matched >= min_proportion_matched:
             matched.append((database_entry, proportion_matched))
     return matched
 
 
+def jacquard_similarity(query: set[str], database_entry_hashes: set[str]) -> float:
+    union = query.union(database_entry_hashes)
+    intersection = query.intersection(database_entry_hashes)
+    return len(intersection) / len(union)
+
 def match(query: set[str], database_entry_hashes: set[str]) -> float:
     matched_hashes = query.intersection(database_entry_hashes)
     number_matched = len(matched_hashes)
     return number_matched / len(query)
+
 
 
 def print_matched_entries(matched: list[(SequenceEntry, float)]):
@@ -87,12 +93,20 @@ def print_matched_entries(matched: list[(SequenceEntry, float)]):
     default=0.95,
     type=float,
     help='The minimal proportion of the queried hashes that match the entry in the database')
-def main(hash_file: str, min_proportion_matched: float):
+@click.option(
+    '--comparison-method',
+    default='default',
+    type=str,
+    help='Comparison method [default, jacquard]')
+def main(hash_file: str, min_proportion_matched: float, comparison_method: str):
     print('Querying Patinder data with a minimal matching proportion of {:.2f}%'.format(min_proportion_matched * 100))
     query = read_hashes_from_file(hash_file)
     database = download_from_loculus()
     print('Total number of sequences in Patinder: {}'.format(len(database)))
-    matched = find(query, database, min_proportion_matched)
+    if comparison_method == 'jaccard':
+        matched = find(query, database, min_proportion_matched, jacquard_similarity)
+    else:   
+        matched = find(query, database, min_proportion_matched, match)
     print('{} sequences match the request'.format(len(matched)))
     print_matched_entries(matched)
 

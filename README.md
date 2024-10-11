@@ -9,7 +9,7 @@ In principle, the marker gene set can be flexible, but for bacterial pathogens, 
 Similar software:
 
 *  https://github.com/lskatz/hashest
-* https://github.com/davideyre/hash-cgmlst 
+*  https://github.com/davideyre/hash-cgmlst 
 
 
 ## Website and Backend (Loculus)

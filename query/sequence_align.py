@@ -4,7 +4,10 @@ from operator import itemgetter
 try:
     from configure import externals, rc, uopen, xrange, get_md5
 except :
-    from configure import externals, rc, uopen, xrange, get_md5
+    try:
+        from query.configure import externals, rc, uopen, xrange, get_md5
+    except:
+        from configure import externals, rc, uopen, xrange, get_md5
 
 usearch = externals['usearch']
 makeblastdb = externals['makeblastdb']

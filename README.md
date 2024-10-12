@@ -20,7 +20,7 @@ We use the [Loculus software](https://loculus.org) to build the website and back
 
 ## Upload
 
-The steps to generate and upload a hash profile is:
+The steps to generate and upload a hash profile are:
 
 1. Go to https://microbioinfo-hackathon.loculus.org/ and create an account and a submitting group (if you haven't yet).
 2. Call the alleles

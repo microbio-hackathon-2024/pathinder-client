@@ -74,3 +74,31 @@ https://microbioinfo-hackathon.loculus.org/salmonella/submission/
 * Automatic updating of the "public" server that has SRA/ENA data.
 * League table of user submissions 
 * 
+
+
+## Worked example - a query.
+
+Allele calling:
+
+```
+python query/sequence_align.py -i  some/SAL_BA2933AA_AS.scaffold.fasta  -r test/cgMLST_v2_ref.fasta -k SAL_BA2933AA_AS -o some_test
+```
+
+Hashing the alleles:
+
+```
+python Hashing.py -i some_test  -n some_test -d 2024 -l here  -o some_test_hash                 
+Output written to: some_test_hash
+```
+
+Doing a query 
+
+```
+python query/query.py --hash-file some_test_hash 
+Querying Patinder data with a minimal matching proportion of 95.00%
+Total number of sequences in Patinder: 114
+3 sequences match the request
+SAL_BA2933AA_AS (2024-06-30, Spain), matched 99.97%, submitted by ASM-Hackathon (https://microbioinfo-hackathon.loculus.org/group/1)
+SAL_BA3624AA_AS (2024-05-01, USA), matched 96.15%, submitted by ASM-Hackathon (https://microbioinfo-hackathon.loculus.org/group/1)
+SAL_BA5451AA_AS (2024-05-09, Spain), matched 96.08%, submitted by ASM-Hackathon (https://microbioinfo-hackathon.loculus.org/group/1)```
+

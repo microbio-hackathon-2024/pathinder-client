@@ -19,6 +19,16 @@ The website of Patinder is at https://microbioinfo-hackathon.loculus.org/.
 We use the [Loculus software](https://loculus.org) to build the website and backend. The config can be found at https://github.com/loculus-project/loculus/pull/2989.
 
 
+## Allele caller 
+
+Allele caller is MLSTType from EToki. It is a simple script that takes a fasta file and a reference fasta file and aligns the sequences to the reference. It then extracts the allele number from the reference and writes it to a file. 
+
+[Etoki](https://github.com/zheminzhou/EToKi) is all the methods from EnteroBase. It uses blast and usearch for retriving the allele  sequences. 
+
+```
+python query/sequence_align.py -i test/SAL_QD2830AA_AS.result.fasta -r test/cgMLST_v2_ref.fasta -k SAL_QD2830AA_AS -o test/TEST.OUT
+``` 
+
 ## TODO
 
 * Client to have a list of mirrored servers to query. 

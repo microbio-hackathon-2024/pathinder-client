@@ -18,8 +18,16 @@ The website of Patinder is at https://microbioinfo-hackathon.loculus.org/.
 
 We use the [Loculus software](https://loculus.org) to build the website and backend. The config can be found at https://github.com/loculus-project/loculus/pull/2989.
 
+## Upload
 
-## Allele caller 
+The steps to generate and upload a hash profile are:
+
+1. Go to https://microbioinfo-hackathon.loculus.org/ and create an account and a submitting group (if you haven't yet).
+2. Call the alleles
+3. Generate the hash profile
+4. Submit
+
+### Allele caller 
 
 Allele caller is MLSTType from EToki. It is a simple script that takes a fasta file and a reference fasta file and aligns the sequences to the reference. It then extracts the allele number from the reference and writes it to a file. 
 
@@ -28,6 +36,35 @@ Allele caller is MLSTType from EToki. It is a simple script that takes a fasta f
 ```
 python query/sequence_align.py -i test/SAL_QD2830AA_AS.result.fasta -r test/cgMLST_v2_ref.fasta -k SAL_QD2830AA_AS -o test/TEST.OUT
 ``` 
+
+### Hash profile generation
+
+Use the [Hashing.py](./Hashing.py) script to generate the hash profile:
+
+```
+python Hashing.py \
+  --input test/TEST.OUT \
+  --out test/TEST.tsv \
+  --submission_id <an ID for your entry> \
+  --date <collection date> \
+  --location <collection location>
+```
+
+### Submit
+
+Use the [submit.py](./submit.py) script to submit your data to Pathinder:
+
+```
+python submit.py \
+  --input test/TEST.tsv \
+  --group-id <your submitting group ID> \
+  --username <your username>
+```
+
+This script will upload the data. Afterward, you have an opportunity to check the upload and approve it. You can find the review page at:
+
+https://microbioinfo-hackathon.loculus.org/salmonella/submission/
+
 
 ## TODO
 

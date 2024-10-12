@@ -71,7 +71,6 @@ def match(query: set[str], database_entry_hashes: set[str]) -> float:
     return number_matched / len(query)
 
 
-
 def print_matched_entries(matched: list[(SequenceEntry, float)]):
     matched_sorted = sorted(matched, key=lambda x: x[1], reverse=True)
     for entry, proportion_match in matched_sorted:
@@ -86,6 +85,42 @@ def print_matched_entries(matched: list[(SequenceEntry, float)]):
         ))
 
 
+def write_distance_matrix_to_tsv(query: set[str], database: list[SequenceEntry], comparison_method, output_file: str,
+                                 query_name: str):
+    # Combine the query with the database into a single list for all-vs-all comparison
+    full_set = [(query_name, query)] + [(entry.submission_id, entry.profile_hash) for entry in database]
+
+    # Create a distance matrix for all-vs-all comparison
+    num_entries = len(full_set)
+    matrix = [[0.0 for _ in range(num_entries)] for _ in range(num_entries)]
+
+    # Fill the matrix with distances
+    for i in range(num_entries):
+        for j in range(i, num_entries):  # Symmetric matrix, so no need to compute j < i
+            if i == j:
+                matrix[i][j] = 0.0  # Distance from a sequence to itself is 0
+            else:
+                similarity = comparison_method(full_set[i][1], full_set[j][1])
+                distance = 1 - similarity  # Convert similarity to distance
+                matrix[i][j] = distance
+                matrix[j][i] = distance  # Symmetric
+
+    # Open a TSV file for writing
+    with open(output_file, 'w', newline='') as file:
+        writer = csv.writer(file, delimiter='\t')
+
+        # Write the header (including the query as the first name)
+        header = [name for name, _ in full_set]
+        writer.writerow([''] + header)  # Empty first cell for alignment
+
+        # Write the matrix row by row
+        for i, (name, _) in enumerate(full_set):
+            row = [name] + ["{:.4f}".format(matrix[i][j]) for j in range(num_entries)]
+            writer.writerow(row)
+
+    print(f"All-vs-all distance matrix written to {output_file}")
+
+
 @click.command()
 @click.option('--hash-file', required=True, help='Path to a file with a comma-separated list of hashes')
 @click.option(
@@ -98,7 +133,19 @@ def print_matched_entries(matched: list[(SequenceEntry, float)]):
     default='default',
     type=str,
     help='Comparison method [default, jacquard]')
-def main(hash_file: str, min_proportion_matched: float, comparison_method: str):
+@click.option(
+    '--matrix-output',
+    default=None,
+    type=str,
+    help='Path to the output TSV file for the distance matrix')
+
+@click.option(
+    '-n', '--query-name',
+    default='QUERY',
+    type=str,
+    help='Name for the query isolate in the matrix outputs')
+
+def main(hash_file: str, min_proportion_matched: float, comparison_method: str, matrix_output: str, query_name: str):
     print('Querying Patinder data with a minimal matching proportion of {:.2f}%'.format(min_proportion_matched * 100))
     query = read_hashes_from_file(hash_file)
     database = download_from_loculus()
@@ -107,6 +154,13 @@ def main(hash_file: str, min_proportion_matched: float, comparison_method: str):
         matched = find(query, database, min_proportion_matched, jacquard_similarity)
     else:   
         matched = find(query, database, min_proportion_matched, match)
+
+    if matrix_output:
+        if comparison_method == 'jaccard':
+            write_distance_matrix_to_tsv(query, database, jacquard_similarity, matrix_output,query_name)
+        else:
+            write_distance_matrix_to_tsv(query, database, match, matrix_output,query_name)
+
     print('{} sequences match the request'.format(len(matched)))
     print_matched_entries(matched)
 

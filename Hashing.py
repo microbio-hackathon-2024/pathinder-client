@@ -1,5 +1,4 @@
 import argparse
-from Bio import SeqIO
 import hashlib
 import re
 import pandas as pd

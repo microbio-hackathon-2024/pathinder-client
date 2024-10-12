@@ -22,11 +22,12 @@ def generate_tsv(input_fasta, output_tsv, submission_id, collection_date, locati
     hashes = []
     # Read the FASTA file and compute the hash for each gene/sequence
     with open(input_fasta, "r") as fasta_file:
-        for record in SeqIO.parse(fasta_file, "fasta"):
-            sequence = str(record.seq)  # Convert sequence to string
-            normalized_sequence = normalize_sequence(sequence)  # Normalize the sequence
-            hash_value = md5_hash(normalized_sequence)  # Compute MD5 hash
-            hashes.append(hash_value)  # Store the hash
+        for line in fasta_file:
+            if not line.startswith(">"):
+                sequence = line.strip()
+                normalized_sequence = normalize_sequence(sequence)  # Normalize the sequence
+                hash_value = md5_hash(normalized_sequence)  # Compute MD5 hash
+                hashes.append(hash_value)  # Store the hash
 
     # Combine all hashes into a single string separated by commas
     profile_hash = ",".join(hashes)

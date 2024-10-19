@@ -39,9 +39,9 @@ def process_fasta_file(file_path):
 
 
 def main():
-    folder_path = '/Users/nfareed/code/pathinder-client/2558265'
+    folder_path = '/Users/nfareed/code/pathinder-client/sal_review'
     all_tsv_out = []
-    if not os.path.exists('all_tsv_out.tsv'):
+    if not os.path.exists('all_tsv_out.tsv') or True:
         for filename in os.listdir(folder_path):
             if filename.endswith('.fasta'):
                 file_path = os.path.join(folder_path, filename)

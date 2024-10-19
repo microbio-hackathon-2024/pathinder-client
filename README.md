@@ -73,7 +73,8 @@ https://microbioinfo-hackathon.loculus.org/salmonella/submission/
 * Client can upload profiles/assemblies to servers.
 * Automatic updating of the "public" server that has SRA/ENA data.
 * League table of user submissions 
-* 
+* create tree from hash profiles of matches 
+* create metadata fields for database 
 
 
 ## Worked example - a query.
